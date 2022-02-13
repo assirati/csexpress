@@ -75,7 +75,131 @@ body {
   .chat-wrapper form button {
     width: 80px;
   }
+
+  .dice-container {
+    display: flex;
+    background-color: rgb(255, 255, 255);
+    width: 400px;
+    margin: 20px auto;
+  }
+
+  .dice {
+    width: 20%;
+    flex: 1;
+    height: auto;
+  }
+
+  .dice img {
+    width: 100%;
+    height: auto;
+  }
   
   #events {
     height: 150px;
   }
+
+  /* Modal e notificações */
+
+  /* Modal styling */
+.modal-container{
+  z-index: 3000;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: block;
+}
+
+.modal-content{
+  min-width: 200px;
+  max-width: 500px;
+  margin : 10% auto;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.modal-content input[type='text']{
+  display: block;
+  padding: 12px 8px;
+  border: 1px solid #e3e3e3;
+  width: 100%;
+}
+
+.modal-content button{
+  margin-top: 10px;
+  background-color: rgb(23, 49, 70, 1);
+  display: block;
+  padding: 12px 8px;
+  width: 100%;
+  text-transform: uppercase;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-content button:disabled{
+  background-color: rgb(23, 49, 70, .5);
+  cursor: not-allowed;
+}
+
+.modal-content #userForm strong{
+  display: block;
+  padding: 7px;
+  color: #5e131b;
+  font-size: 14px;
+  margin-bottom: 10px;
+  background-color: #ffdcdc;
+  border-radius: 5px;
+}
+
+.modal-overlay{
+  z-index: 2000;
+  background-color: rgba(0,0,0,.9);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: block;
+}
+
+div.notification{
+  z-index: 4000;
+  position: fixed;
+  top: -100px;
+  left: 34%;
+  width: 30%;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 7px;
+  text-align: center;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 1);
+  border: 1px solid transparent;
+  line-height: 1.3em;
+  transition: top .2s ease-in-out;
+  font-weight: 500;
+}
+
+div.notification.show{
+  top: -5px;
+}
+
+div.notification.info{
+  color: #6b5208;
+  background-color: #fff5d3;
+  border-color: #f1dfa9;
+}
+
+div.notification.success{
+  background-color: #e2f8e7;
+  color: #0f4e1d;
+  border-color: #a7d1b1;
+}
+
+div.notification.danger{
+  color: #66131b;
+  background-color: #fcd4d7;
+  border-color: #dfa3a9;
+}
