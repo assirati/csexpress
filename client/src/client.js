@@ -7,8 +7,7 @@ const log = (text) => {
     parent.scrollTop = parent.scrollHeight;
 };
 
-let players = []; // All players in the game
-let currentPlayer; // Player object for individual players
+let currentPlayer;
 
 const onChatSubmitted = (sock) => (e) => {
     e.preventDefault();
@@ -25,18 +24,24 @@ const onRoll = (sock) => (e) => {
     sock.emit('rollDice');
 };
 
-const onUserLogged = (sock) => (e) => {
+const onCurrentPlayerJoins = (sock, players) => (e) => {
     e.preventDefault();
-
     const playername = document.getElementById('playername');
-
+    currentPlayer = new Player(players.length, playername.value);
     sock.playername = playername.value;
-
     sock.emit('newPlayer', playername.value);
-    
     playername.value = '';
 
     return false;
+};
+
+const onNewPlayerJoined = (data, players) => {
+    const table = document.getElementById("players-table");
+    table.innerHTML = '';
+    data.forEach((player) => {
+        players.push(new Player(player.id, player.name));
+        table.innerHTML += `<tr><td>${player.name}</td></tr>`;
+    });
 };
 
 const disableFormElems = (options) => {
@@ -52,8 +57,10 @@ const  onAwaitingConnection = ( data ) => {
 
 (() => {
 
-    const canvas = document.querySelector('canvas');
-    const ctx = canvas.getContext('2d');
+    let players = [];
+
+    //const canvas = document.querySelector('canvas');
+    //const ctx = canvas.getContext('2d');
 
     const sock = io();
 
@@ -67,9 +74,13 @@ const  onAwaitingConnection = ( data ) => {
         document.getElementById("dice5").src = `img/dice${data.dice5}.png`;
     });
 
+    //Quando o servidor avisa que um novo jogador entrou
+    sock.on('newPlayerJoined', (data) => onNewPlayerJoined(data, players));
+
+    //Quando o servidor avisa que está aguardando jogadores
     sock.on('awaitingPlayers', (data) => onAwaitingConnection(data));
 
-    // Show modal event
+    // Mostra um evento modal
     sock.on('show modal', () => {
         disableFormElems(true);
         const modalContainer = document.querySelector('.modal-container');
@@ -77,7 +88,7 @@ const  onAwaitingConnection = ( data ) => {
         modalContainer.modalOverlay.style.display = 'block';
     });
 
-    // Close modal event
+    // Fecha o evento modal
     sock.on('close modal', () => {
         disableFormElems(false);
         //newElem = document.createElement('strong');
@@ -89,9 +100,9 @@ const  onAwaitingConnection = ( data ) => {
         modalOverlay.style.display = 'none';
     });
 
-    document
-        .querySelector('#chat-form')
-        .addEventListener('submit', onChatSubmitted(sock));
+    //document
+    //    .querySelector('#chat-form')
+    //    .addEventListener('submit', onChatSubmitted(sock));
 
     document
         .getElementById("roll-button")
@@ -99,7 +110,7 @@ const  onAwaitingConnection = ( data ) => {
 
     document
         .getElementById("newPlayerForm")
-        .addEventListener('submit', onUserLogged(sock));
+        .addEventListener('submit', onCurrentPlayerJoins(sock, players));
 
 })();
 

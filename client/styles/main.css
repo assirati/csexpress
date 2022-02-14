@@ -100,7 +100,6 @@ body {
 
   /* Modal e notificações */
 
-  /* Modal styling */
 .modal-container{
   z-index: 3000;
   position: absolute;
@@ -202,4 +201,32 @@ div.notification.danger{
   color: #66131b;
   background-color: #fcd4d7;
   border-color: #dfa3a9;
+}
+
+/* Interface */
+
+.players-table img {
+  height: 40px;
+  width: 30px;
+}
+
+.players-table td {
+  padding-right: 20px;
+}
+
+.players-box {
+  width: 400px;
+  margin: 20px auto;
+  border: 1px solid lightgrey;  
+  position: relative;
+  font-family: "Roboto Slab", sans-serif;
+}
+
+.current-player {
+  width: 400px;
+  margin: 20px auto;
+  border: 1px solid lightgrey;  
+  position: relative;
+  font-family: "Roboto Slab", sans-serif;
+  text-align: center;
 }

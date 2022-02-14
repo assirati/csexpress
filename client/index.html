@@ -7,7 +7,12 @@
   </head>
   <body>
     <div class="game-interface">
-      <canvas height="400" width="400"></canvas>
+      <!--<canvas height="400" width="400"></canvas>-->
+      <div class="players-box" id="players-box">
+        <h3>Jogadores online no momento:</h3>
+        <table id="players-table"></table>
+      </div>
+      <!--<div class="current-player" id="current-player"></div>-->
       <div class="dice-container">
         <div class="dice">
           <img src="img/dice1.png" alt="" id="dice1" />
@@ -30,8 +35,6 @@
         <div class="controls">
           <div class="chat-wrapper">
             <button id="roll-button">Jogar dados</button>
-            <form id="chat-form">             
-            </form>
           </div>
         </div>
       </div>
