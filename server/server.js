@@ -34,11 +34,33 @@ io.on('connection', (sock) => {
         newPlayer = new Player(players.length, playerName);
         players.push(newPlayer);
         sock.emit('message', 'Você está conectado...');
+        sock.playerName = newPlayer.name;
+        sock.playerId = newPlayer.id;
         io.emit('message', newPlayer.name + ' entrou no jogo!');
         io.emit('message', 'Aguardando mais jogadores entrarem...');
         io.emit('newPlayerJoined', players);
         sock.emit('close modal');
     });
+
+    sock.on('disconnect', ( reason ) => {
+        let removedPlayer = players.splice(players.indexOf(sock.playerName), 1);
+
+        if (reason === 'transport close' && players.length === 0) {
+            players = removedPlayer;
+            return false;
+        }
+
+        if (players.length === 1 && (reason === 'client namespace disconnect' || reason === 'transport close')) {
+            //broadcastPlayernames();
+            //io.emit('await player', {error: `${game.ucFirst(removedPlayer[0])} has left the game. Waiting for second player to join..`}); 
+            io.emit('newPlayerJoined', players);
+        } else {
+            io.emit('close modal');
+        }
+
+        io.emit('message', sock.playerName + ' desconectou...');
+    });
+
 });
 
 server.on('error', (err) => {
