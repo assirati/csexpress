@@ -35,7 +35,7 @@ server.on('error', (err) => {
     console.error(err);
 });
 
-server.listen(8080, () => {
+server.listen(80, () => {
     console.log('Servidor pronto. Escutando a porta 8080...');
 });
 
