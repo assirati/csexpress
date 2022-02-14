@@ -27,7 +27,7 @@ io.on('connection', (sock) => {
         sock.emit('message', 'Você está conectado...');
         io.emit('message', playerName + ' entrou no jogo!');
         io.emit('message', 'Aguardando mais jogadores entrarem...');
-        io.emit('close modal');
+        sock.emit('close modal');
     });
 });
 
@@ -38,7 +38,6 @@ server.on('error', (err) => {
 server.listen(process.env.PORT || 8080, () => {
     console.log('Servidor pronto. Escutando a porta 8080...');
 });
-
 
 function rollDice() {
     const number = Math.ceil(Math.random() * 6);

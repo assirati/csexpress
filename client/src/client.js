@@ -48,8 +48,6 @@ const disableFormElems = (options) => {
 const  onAwaitingConnection = ( data ) => {
     disableFormElems(true);
     const newPlayerForm = document.getElementById("newPlayerForm");
-    newPlayerForm.prepend(Dice.newElem);
-    newPlayerForm.replaceChild(Dice.newElem, Dice.newElem);
 };
 
 (() => {
