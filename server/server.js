@@ -56,8 +56,9 @@ io.on('connection', (sock) => {
               io.emit('message', counter);
               counter--
               if (counter === 0) {
-                io.sockets.emit('message', "Congratulations You WON!!");
+                io.sockets.emit('message', "Iniciando partida...");
                 clearInterval(StartCountdown);
+                counter = 4;
               }
             }, 1000);
             StartCountdown.start();
