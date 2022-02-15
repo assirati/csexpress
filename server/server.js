@@ -1,6 +1,8 @@
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
+const Player = require('../lib/player');
+
 const port = process.env.PORT || 8080;
 
 const app = express();
@@ -13,8 +15,7 @@ const io = socketio(server);
 // To store the names of active players
 let players = [];
 
-// To store the count of connected players
-let connections = [];
+let StartCountdown = false;
 
 io.on('connection', (sock) => {
 
@@ -31,34 +32,52 @@ io.on('connection', (sock) => {
     });
 
     sock.on('newPlayer', (playerName) => {
-        newPlayer = new Player(players.length, playerName);
+        newPlayer = new Player(players.length, playerName, false);
         players.push(newPlayer);
         sock.emit('message', 'Você está conectado...');
         sock.playerName = newPlayer.name;
         sock.playerId = newPlayer.id;
         io.emit('message', newPlayer.name + ' entrou no jogo!');
         io.emit('message', 'Aguardando mais jogadores entrarem...');
-        io.emit('newPlayerJoined', players);
+        io.emit('playerListUpdateed', players);
         sock.emit('close modal');
     });
 
+    sock.on('statusChanged', (playerName) => {
+        idx = players.findIndex(obj => obj.name === playerName)
+        players[idx].ready = !players[idx].ready
+        io.emit('playerListUpdateed', players);
+
+        if (players.every(el => el.ready == true))
+        {
+            io.emit('message', "Todos os jogadores prontos, começando em 5");
+            var counter = 4;
+            StartCountdown = new Interval(function(){
+              io.emit('message', counter);
+              counter--
+              if (counter === 0) {
+                io.sockets.emit('message', "Congratulations You WON!!");
+                clearInterval(StartCountdown);
+              }
+            }, 1000);
+            StartCountdown.start();
+
+        } else 
+        {
+            if (StartCountdown.isRunning()) {
+                io.emit('message', "Início interrompido!");            
+                StartCountdown.stop();
+            }
+        }
+               
+    });
+
     sock.on('disconnect', ( reason ) => {
-        let removedPlayer = players.splice(players.indexOf(sock.playerName), 1);
-
-        if (reason === 'transport close' && players.length === 0) {
-            players = removedPlayer;
-            return false;
+        if(sock.playerName !== undefined) {
+            let removedPlayer = players.splice(players.indexOf(sock.playerName), 1);
+            io.emit('playerListUpdateed', players);
+            io.emit('message', sock.playerName + ' desconectou...');
         }
-
-        if (players.length === 1 && (reason === 'client namespace disconnect' || reason === 'transport close')) {
-            //broadcastPlayernames();
-            //io.emit('await player', {error: `${game.ucFirst(removedPlayer[0])} has left the game. Waiting for second player to join..`}); 
-            io.emit('newPlayerJoined', players);
-        } else {
-            io.emit('close modal');
-        }
-
-        io.emit('message', sock.playerName + ' desconectou...');
     });
 
 });
@@ -76,9 +95,17 @@ function rollDice() {
     return number;
 }
 
-class Player {
-    constructor(id, name) {
-      this.id = id;
-      this.name = name;
-    }
+function Interval(fn, time) {
+    var timer = false;
+    this.start = function () {
+        if (!this.isRunning())
+            timer = setInterval(fn, time);
+    };
+    this.stop = function () {
+        clearInterval(timer);
+        timer = false;
+    };
+    this.isRunning = function () {
+        return timer !== false;
+    };
 }

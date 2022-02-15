@@ -7,8 +7,6 @@ const log = (text) => {
     parent.scrollTop = parent.scrollHeight;
 };
 
-let currentPlayer;
-
 const onChatSubmitted = (sock) => (e) => {
     e.preventDefault();
 
@@ -27,21 +25,29 @@ const onRoll = (sock) => (e) => {
 const onCurrentPlayerJoins = (sock, players) => (e) => {
     e.preventDefault();
     const playername = document.getElementById('playername');
-    currentPlayer = new Player(players.length, playername.value);
     sock.playername = playername.value;
     sock.emit('newPlayer', playername.value);
-    playername.value = '';
-
     return false;
 };
 
-const onNewPlayerJoined = (data, players) => {
+const onPlayerListUpdateed = (data, players) => {
     const table = document.getElementById("players-table");
-    table.innerHTML = '';
+    table.innerHTML = '<tr><th>Nome</th><th>Pronto?</th></tr>';
     data.forEach((player) => {
-        players.push(new Player(player.id, player.name));
-        table.innerHTML += `<tr><td>${player.name}</td></tr>`;
+        players.push(new Player(player.id, player.name, player.ready));
+        table.innerHTML += `<tr><td>${player.name}</td>
+                                <td>${(player.ready) ? '✔️' : '❌'}</td></tr>`;
     });
+};
+
+const onStatusChange = (sock) => (e) => {
+    e.preventDefault();
+    sock.emit('statusChanged', sock.playername);
+};
+
+const onBtnTesteClick = () => (e) => {
+    e.preventDefault();
+    document.getElementById('newPlayerForm').submit();
 };
 
 const disableFormElems = (options) => {
@@ -75,7 +81,7 @@ const  onAwaitingConnection = ( data ) => {
     });
 
     //Quando o servidor avisa que um novo jogador entrou
-    sock.on('newPlayerJoined', (data) => onNewPlayerJoined(data, players));
+    sock.on('playerListUpdateed', (data) => onPlayerListUpdateed(data, players));
 
     //Quando o servidor avisa que está aguardando jogadores
     sock.on('awaitingPlayers', (data) => onAwaitingConnection(data));
@@ -112,11 +118,16 @@ const  onAwaitingConnection = ( data ) => {
         .getElementById("newPlayerForm")
         .addEventListener('submit', onCurrentPlayerJoins(sock, players));
 
+    document
+        .getElementById("ready-checkbox")
+        .addEventListener('change', onStatusChange(sock));
+
 })();
 
 class Player {
-    constructor(id, name) {
+    constructor(id, name, ready) {
       this.id = id;
       this.name = name;
+      this.ready;
     }
 }

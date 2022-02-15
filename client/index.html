@@ -9,8 +9,8 @@
     <div class="game-interface">
       <!--<canvas height="400" width="400"></canvas>-->
       <div class="players-box" id="players-box">
-        <h3>Jogadores online no momento:</h3>
-        <table id="players-table"></table>
+        <h3>Jogadores online no momento</h3>
+        <table id="players-table" class="players-table" ></table>
       </div>
       <!--<div class="current-player" id="current-player"></div>-->
       <div class="dice-container">
@@ -35,6 +35,10 @@
         <div class="controls">
           <div class="chat-wrapper">
             <button id="roll-button">Jogar dados</button>
+            Pronto? <label class="switch">
+              <input id="ready-checkbox" type="checkbox">
+              <span class="slider round"></span>
+            </label>
           </div>
         </div>
       </div>
