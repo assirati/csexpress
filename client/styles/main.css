@@ -49,6 +49,31 @@ body {
     display: block;
     margin: 10px auto;
   }
+
+  .main-panel {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+    display: flex;
+    align-content: center;
+  }
+
+  .game-interface {
+    order: 0;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+    align-self: auto;
+  }
+
+  .scoreboard-panel {
+    order: 0;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+    align-self: auto;
+  }
   
   .controls-wrapper {
     background-color: rgb(255, 255, 255);

@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const Player = require('../lib/player');
+const Roll = require('../lib/roll');
 
 const port = process.env.PORT || 8080;
 
@@ -22,12 +23,13 @@ io.on('connection', (sock) => {
     sock.on('message', (text) => io.emit('message', text));
 
     sock.on('rollDice', () => {
+        let roll = new Roll();
         io.emit('diceRolled', {
-            dice1: rollDice(),
-            dice2: rollDice(),
-            dice3: rollDice(),
-            dice4: rollDice(),
-            dice5: rollDice(),
+            dice1: roll.dices[0],
+            dice2: roll.dices[1],
+            dice3: roll.dices[2],
+            dice4: roll.dices[3],
+            dice5: roll.dices[4],
           });
     });
 
@@ -65,7 +67,7 @@ io.on('connection', (sock) => {
 
         } else 
         {
-            if (StartCountdown.isRunning()) {
+            if (StartCountdown.isRunning) {
                 io.emit('message', "Início interrompido!");            
                 StartCountdown.stop();
             }
