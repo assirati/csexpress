@@ -50,6 +50,11 @@ const onBtnTesteClick = () => (e) => {
     document.getElementById('newPlayerForm').submit();
 };
 
+const onBtnChoiceClick = (sock) => (e) => {
+    e.preventDefault();
+    sock.emit('message', sock.playername + ' escolheu "X" e "Y", deixando "Z"');
+};
+
 const disableFormElems = (options) => {
     const modalContainer = document.querySelector('.modal-container');
     modalContainer.getElementsByTagName('input')[0].setAttribute('disabled', options);
@@ -90,6 +95,8 @@ const  onAwaitingConnection = ( data ) => {
                             </thead>
                             <tbody>`;
 
+        let i = 0;
+
         dataChoices.forEach((choice) => {
             var c = choice.split('');
             table.innerHTML += `<tr>
@@ -100,12 +107,16 @@ const  onAwaitingConnection = ( data ) => {
             <td class="tg-9wq8"><img src="img/dice${c[3]}.png" alt="" class="dice-choice" /></td>
             <td class="tg-9wq8"><img src="img/dice${c[4]}.png" alt="" class="dice-choice" /></td>
             <td class="tg-9wq8"> =${parseInt(c[3]) + parseInt(c[4])}</td>
-            <td class="tg-9wq8"><button id="choice1" class="">Escolher</button> </td>
+            <td class="tg-9wq8"><button id="choice${i}" class="btnChoice">Escolher</button> </td>
           </tr>`;
-
+          i++;
         });
-
         table.innerHTML += `</tbody>`;
+
+        for (let i = 0; i < dataChoices.length; i++)
+            document
+            .getElementById("choice" + i)
+            .addEventListener('click', onBtnChoiceClick(sock));
     });
 
     //Quando o servidor avisa que um novo jogador entrou

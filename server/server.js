@@ -18,6 +18,8 @@ let players = [];
 
 let StartCountdown = false;
 
+let currentTurn = 0;
+
 io.on('connection', (sock) => {
 
     sock.on('message', (text) => io.emit('message', text));
@@ -52,22 +54,24 @@ io.on('connection', (sock) => {
 
         if (players.every(el => el.ready == true))
         {
-            io.emit('message', "Todos os jogadores prontos, começando em 5");
-            var counter = 4;
+            io.emit('message', "Todos os jogadores prontos, começando em:");
+            var counter = 5;
             StartCountdown = new Interval(function(){
               io.emit('message', counter);
               counter--
               if (counter === 0) {
+                //io.sockets.emit('gameStart');
                 io.sockets.emit('message', "Iniciando partida...");
                 clearInterval(StartCountdown);
-                counter = 4;
+                StartCountdown.stop();
+                newTurn();
               }
             }, 1000);
             StartCountdown.start();
 
         } else 
         {
-            if (StartCountdown.isRunning) {
+            if (StartCountdown.isRunning()) {
                 io.emit('message', "Início interrompido!");            
                 StartCountdown.stop();
             }
@@ -112,3 +116,16 @@ function Interval(fn, time) {
         return timer !== false;
     };
 }
+
+const newTurn = () => {
+    currentTurn++;
+    io.emit('message', currentTurn + "ª rodada");
+    let roll = new Roll();
+    io.emit('diceRolled', {
+        dice1: roll.dices[0],
+        dice2: roll.dices[1],
+        dice3: roll.dices[2],
+        dice4: roll.dices[3],
+        dice5: roll.dices[4]},
+        roll.choices);
+};
