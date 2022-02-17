@@ -72,12 +72,40 @@ const  onAwaitingConnection = ( data ) => {
 
     sock.on('message', log);
 
-    sock.on('diceRolled', (data) => {
-        document.getElementById("dice1").src = `img/dice${data.dice1}.png`;
-        document.getElementById("dice2").src = `img/dice${data.dice2}.png`;
-        document.getElementById("dice3").src = `img/dice${data.dice3}.png`;
-        document.getElementById("dice4").src = `img/dice${data.dice4}.png`;
-        document.getElementById("dice5").src = `img/dice${data.dice5}.png`;
+    sock.on('diceRolled', (dataDices, dataChoices) => {
+        document.getElementById("dice1").src = `img/dice${dataDices.dice1}.png`;
+        document.getElementById("dice2").src = `img/dice${dataDices.dice2}.png`;
+        document.getElementById("dice3").src = `img/dice${dataDices.dice3}.png`;
+        document.getElementById("dice4").src = `img/dice${dataDices.dice4}.png`;
+        document.getElementById("dice5").src = `img/dice${dataDices.dice5}.png`;
+
+        const table = document.getElementById("choices-table");
+        table.innerHTML = `<thead>
+                                <tr>
+                                <th class="tg-c3ow">5º dado</th>
+                                <th class="tg-c3ow" colspan="3">Par 1</th>
+                                <th class="tg-c3ow" colspan="3">Par 2</th>
+                                <th class="tg-0pky"></th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+        dataChoices.forEach((choice) => {
+            var c = choice.split('');
+            table.innerHTML += `<tr>
+            <td class="tg-9wq8"><img src="img/dice${c[0]}.png" alt="" class="fifthdice-choice" /></td>
+            <td class="tg-9wq8"><img src="img/dice${c[1]}.png" alt="" class="dice-choice" /></td>
+            <td class="tg-9wq8"><img src="img/dice${c[2]}.png" alt="" class="dice-choice" /></td>
+            <td class="tg-9wq8"> =${parseInt(c[1]) + parseInt(c[2])}</td>
+            <td class="tg-9wq8"><img src="img/dice${c[3]}.png" alt="" class="dice-choice" /></td>
+            <td class="tg-9wq8"><img src="img/dice${c[4]}.png" alt="" class="dice-choice" /></td>
+            <td class="tg-9wq8"> =${parseInt(c[3]) + parseInt(c[4])}</td>
+            <td class="tg-9wq8"><button id="choice1" class="">Escolher</button> </td>
+          </tr>`;
+
+        });
+
+        table.innerHTML += `</tbody>`;
     });
 
     //Quando o servidor avisa que um novo jogador entrou

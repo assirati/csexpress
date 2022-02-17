@@ -74,10 +74,87 @@ body {
     flex-basis: auto;
     align-self: auto;
   }
-  
-  .controls-wrapper {
+
+  /* Choices Panel */
+
+  .choices-panel {
+    width: 30%;
+    align-items: center;
+  } 
+
+  .dice-container {
+    display: flex;
     background-color: rgb(255, 255, 255);
     width: 400px;
+    margin: 20px auto;
+  }
+
+  .dice {
+    width: 20%;
+    flex: 1;
+    height: auto;
+  }
+
+  .dice img {
+    width: 100%;
+    height: auto;
+  }
+
+  .fifthdice-choice {
+    width: 52%;
+    height: auto;
+  }
+
+  .dice-choice {
+    width: 95%;
+    height: auto;
+  }
+
+  .tg  {
+    border-collapse:collapse;
+    border-spacing:0;
+
+  }
+
+  .tg td{
+    border-color:black;
+    border-style:solid;
+    border-width:1px;
+    font-family:Arial, sans-serif;
+    font-size:14px;
+    overflow:hidden;
+    padding:10px 5px;
+    word-break:normal;
+  }
+
+  .tg th{
+    border-color:black;
+    border-style:solid;
+    border-width:1px;
+    overflow:hidden;
+    padding:10px 5px;
+    word-break:normal;
+  }
+
+  .tg .tg-9wq8{
+    border-color:inherit;text-align:center;vertical-align:middle
+  }
+
+  .tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
+
+  .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+
+  @media screen and (max-width: 767px) {
+    .tg {width: auto !important;}
+    .tg col {width: auto !important;}
+    .tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;}
+  }
+
+  /* Middle Controls */
+
+  .controls-wrapper {
+    background-color: rgb(255, 255, 255);
+    width: 100%;
     margin: 20px auto;
     border: 1px solid lightgrey;
   }
@@ -101,27 +178,16 @@ body {
     width: 80px;
   }
 
-  .dice-container {
-    display: flex;
-    background-color: rgb(255, 255, 255);
-    width: 400px;
-    margin: 20px auto;
-  }
-
-  .dice {
-    width: 20%;
-    flex: 1;
-    height: auto;
-  }
-
-  .dice img {
-    width: 100%;
-    height: auto;
-  }
-  
   #events {
-    height: 150px;
+    height: 300px;
   }
+
+  /* Scoreboard */
+
+  .scoreboard-panel{
+    width: 30%;
+    align-items: center;
+  } 
 
   /* Modal e notificações */
 

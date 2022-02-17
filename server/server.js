@@ -29,8 +29,8 @@ io.on('connection', (sock) => {
             dice2: roll.dices[1],
             dice3: roll.dices[2],
             dice4: roll.dices[3],
-            dice5: roll.dices[4],
-          });
+            dice5: roll.dices[4]},
+            roll.choices);
     });
 
     sock.on('newPlayer', (playerName) => {
