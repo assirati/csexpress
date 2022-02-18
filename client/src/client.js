@@ -1,3 +1,5 @@
+let choices = [];
+
 const log = (text) => {
     const parent = document.querySelector('#events');
     const el = document.createElement('li');
@@ -53,8 +55,18 @@ const onBtnTesteClick = () => (e) => {
 const onBtnChoiceClick = (sock) => (e) => {
     e.preventDefault();
     const clickedThing = e.target;
-    let val = clickedThing.value;
-    sock.emit('message', sock.playername + ' escolheu "' + sock.choices + '" e "Y", deixando "Z"');
+    let chiceNum = clickedThing.value;
+
+    let c = choices[chiceNum].split('');
+
+    sock.emit('message', `${sock.playername} escolheu "${parseInt(c[1]) + parseInt(c[2])}" e "${parseInt(c[3]) + parseInt(c[4])}", deixando "${c[0]}"`);
+
+    let elements = document.getElementsByClassName('btnChoice');
+
+    Array.from(elements).forEach((el) => {
+        el.disabled = true;
+    });
+
 };
 
 const disableFormElems = (options) => {
@@ -80,6 +92,7 @@ const  onAwaitingConnection = ( data ) => {
     sock.on('message', log);
 
     sock.on('diceRolled', (dataDices, dataChoices) => {
+        choices = dataChoices;
         document.getElementById("dice1").src = `img/dice${dataDices.dice1}.png`;
         document.getElementById("dice2").src = `img/dice${dataDices.dice2}.png`;
         document.getElementById("dice3").src = `img/dice${dataDices.dice3}.png`;

@@ -25,7 +25,11 @@ body {
     outline: none;
   }
   
-  button:hover {
+  button:disabled {
+    background-color: #aaaaaa;
+  }  
+
+  button:hover:not([disabled]) {
     background-color: #79d7e4;
   }
   
