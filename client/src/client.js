@@ -52,7 +52,9 @@ const onBtnTesteClick = () => (e) => {
 
 const onBtnChoiceClick = (sock) => (e) => {
     e.preventDefault();
-    sock.emit('message', sock.playername + ' escolheu "X" e "Y", deixando "Z"');
+    const clickedThing = e.target;
+    let val = clickedThing.value;
+    sock.emit('message', sock.playername + ' escolheu "' + sock.choices + '" e "Y", deixando "Z"');
 };
 
 const disableFormElems = (options) => {
@@ -107,11 +109,13 @@ const  onAwaitingConnection = ( data ) => {
             <td class="tg-9wq8"><img src="img/dice${c[3]}.png" alt="" class="dice-choice" /></td>
             <td class="tg-9wq8"><img src="img/dice${c[4]}.png" alt="" class="dice-choice" /></td>
             <td class="tg-9wq8"> =${parseInt(c[3]) + parseInt(c[4])}</td>
-            <td class="tg-9wq8"><button id="choice${i}" class="btnChoice">Escolher</button> </td>
+            <td class="tg-9wq8"><button id="choice${i}" value="${i}" class="btnChoice">Escolher</button> </td>
           </tr>`;
-          i++;
+            i++;
         });
         table.innerHTML += `</tbody>`;
+
+        sock.dataChoices = dataChoices;
 
         for (let i = 0; i < dataChoices.length; i++)
             document
