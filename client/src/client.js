@@ -42,9 +42,17 @@ const onPlayerListUpdateed = (data, players) => {
     });
 };
 
-const onStatusChange = (sock) => (e) => {
+const onAwaitingPlayersChoice = () => {
+
+
+}
+
+const onPlayerReady = (sock) => (e) => {
     e.preventDefault();
-    sock.emit('statusChanged', sock.playername);
+
+    document.getElementById('ready-button').disabled = true;
+
+    sock.emit('playerReadyToStart', sock.playername);
 };
 
 const onBtnTesteClick = () => (e) => {
@@ -57,9 +65,7 @@ const onBtnChoiceClick = (sock) => (e) => {
     const clickedThing = e.target;
     let chiceNum = clickedThing.value;
 
-    let c = choices[chiceNum].split('');
-
-    sock.emit('message', `${sock.playername} escolheu "${parseInt(c[1]) + parseInt(c[2])}" e "${parseInt(c[3]) + parseInt(c[4])}", deixando "${c[0]}"`);
+    let c = choices[chiceNum];
 
     let elements = document.getElementsByClassName('btnChoice');
 
@@ -67,6 +73,7 @@ const onBtnChoiceClick = (sock) => (e) => {
         el.disabled = true;
     });
 
+    sock.emit('choiceMade', c);
 };
 
 const disableFormElems = (options) => {
@@ -136,6 +143,9 @@ const  onAwaitingConnection = ( data ) => {
             .addEventListener('click', onBtnChoiceClick(sock));
     });
 
+    //Aguardando a jogada de cada jogador
+    sock.on('awaitingPlayersChoice', () => onAwaitingPlayersChoice());
+
     //Quando o servidor avisa que um novo jogador entrou
     sock.on('playerListUpdateed', (data) => onPlayerListUpdateed(data, players));
 
@@ -162,21 +172,13 @@ const  onAwaitingConnection = ( data ) => {
         modalOverlay.style.display = 'none';
     });
 
-    //document
-    //    .querySelector('#chat-form')
-    //    .addEventListener('submit', onChatSubmitted(sock));
-
-    document
-        .getElementById("roll-button")
-        .addEventListener("click", onRoll(sock));
-
     document
         .getElementById("newPlayerForm")
         .addEventListener('submit', onCurrentPlayerJoins(sock, players));
 
     document
-        .getElementById("ready-checkbox")
-        .addEventListener('change', onStatusChange(sock));
+        .getElementById("ready-button")
+        .addEventListener('click', onPlayerReady(sock));
 
 })();
 

@@ -15,10 +15,8 @@ const io = socketio(server);
 
 // To store the names of active players
 let players = [];
-
-let StartCountdown = false;
-
 let currentTurn = 0;
+let gameStarted = false;
 
 io.on('connection', (sock) => {
 
@@ -47,46 +45,62 @@ io.on('connection', (sock) => {
         sock.emit('close modal');
     });
 
-    sock.on('statusChanged', (playerName) => {
+    sock.on('playerReadyToStart', (playerName) => {
         idx = players.findIndex(obj => obj.name === playerName)
         players[idx].ready = !players[idx].ready
         io.emit('playerListUpdateed', players);
 
+        let StartCountdown = new Interval(function(){
+            io.emit('message', counter);
+            counter--
+            if (counter === 0) {
+              io.sockets.emit('message', "Iniciando partida...");
+              currentTurn == 0;
+              clearInterval(StartCountdown);
+              StartCountdown.stop();
+              newTurn();
+            }
+          }, 1000);
+
         if (players.every(el => el.ready == true))
         {
             io.emit('message', "Todos os jogadores prontos, começando em:");
-            var counter = 5;
-            StartCountdown = new Interval(function(){
-              io.emit('message', counter);
-              counter--
-              if (counter === 0) {
-                //io.sockets.emit('gameStart');
-                io.sockets.emit('message', "Iniciando partida...");
-                clearInterval(StartCountdown);
-                StartCountdown.stop();
-                newTurn();
-              }
-            }, 1000);
+            var counter = 3;
             StartCountdown.start();
 
         } else 
         {
             if (StartCountdown.isRunning()) {
-                io.emit('message', "Início interrompido!");            
+                io.emit('message', "Início interrompido!");
+                gameStarted = false;
                 StartCountdown.stop();
             }
         }
                
     });
 
-    sock.on('disconnect', ( reason ) => {
+    sock.on('disconnect', (reason) => {
         if(sock.playerName !== undefined) {
             let removedPlayer = players.splice(players.indexOf(sock.playerName), 1);
             io.emit('playerListUpdateed', players);
             io.emit('message', sock.playerName + ' desconectou...');
+            
+            if (players.length < 1)
+                resetGame();
         }
     });
 
+    sock.on('choiceMade', (c) => {
+        io.emit('message', `${sock.playerName} escolheu "${parseInt(c[1]) + parseInt(c[2])}" e "${parseInt(c[3]) + parseInt(c[4])}", deixando "${c[0]}"`);
+        const player = players.find(p => p.name === sock.playerName);
+        player.ready = true;
+        io.emit('playerListUpdateed', players);
+
+        if (players.every(el => el.ready == true))
+            newTurn();
+        else
+            sock.emit('message', 'Aguardando a escolha dos outros jogadores');
+    });      
 });
 
 server.on('error', (err) => {
@@ -97,9 +111,8 @@ server.listen(port, () => {
     console.log('Servidor pronto. Escutando a porta 8080...');
 });
 
-function rollDice() {
-    const number = Math.ceil(Math.random() * 6);
-    return number;
+function resetGame() {
+    currentTurn = 0;
 }
 
 function Interval(fn, time) {
@@ -128,4 +141,9 @@ const newTurn = () => {
         dice4: roll.dices[3],
         dice5: roll.dices[4]},
         roll.choices);
+    players.forEach((p) => {
+        p.ready = false;
+    });
+    io.emit('awaitingPlayersChoice');
+    io.emit('playerListUpdateed', players);
 };
