@@ -117,7 +117,6 @@ body {
   .tg  {
     border-collapse:collapse;
     border-spacing:0;
-
   }
 
   .tg td{
@@ -401,4 +400,70 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* Results Table */
+.xyz  {
+  border-collapse:collapse;
+  border-spacing:0;
+  border-color:black
+}
+
+.xyz td{
+  border-color:black;
+  border-style:solid;
+  border-width:1px;
+  font-family:Arial, sans-serif;
+  font-size:14px;
+  overflow:hidden;
+  padding:10px 5px;
+  word-break:normal;
+}
+
+.xyz th{
+  border-color:black;
+  border-style:solid;
+  border-width:1px;
+  font-family:Arial, sans-serif;
+  font-size:14px;
+  font-weight:normal;
+  overflow:hidden;
+  padding:10px 5px;
+  word-break:normal;
+}
+
+.xyz .tg-efol{
+  background-color:#c0c0c0;
+  border-color:inherit;
+  font-weight:bold;
+  text-align:center;
+  vertical-align:middle
+}
+
+.xyz .tg-uzvj{
+  border-color:inherit;
+  font-weight:bold;
+  text-align:center;
+  vertical-align:middle
+}
+
+.xyz .tg-7btt{
+  border-color:inherit;
+  font-weight:bold;
+  text-align:center;
+  vertical-align:top
+}
+
+@media screen and (max-width: 767px) {
+  .xyz {
+    width: auto !important;
+  }
+
+  .xyz col {
+    width: auto !important;
+  }
+  .scoreboard-panel {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }

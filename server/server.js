@@ -13,7 +13,6 @@ app.use(express.static(`${__dirname}/../client`));
 const server = http.createServer(app);
 const io = socketio(server);
 
-// To store the names of active players
 let players = [];
 let currentTurn = 0;
 let gameStarted = false;
