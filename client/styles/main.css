@@ -54,35 +54,23 @@ body {
     margin: 10px auto;
   }
 
+  /* Panels */
+
   .main-panel {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: stretch;
-    display: flex;
     align-content: center;
   }
 
   .game-interface {
-    order: 0;
-    flex-grow: 0;
-    flex-shrink: 1;
-    flex-basis: auto;
     align-self: auto;
   }
 
   .scoreboard-panel {
-    order: 0;
-    flex-grow: 0;
-    flex-shrink: 1;
-    flex-basis: auto;
     align-self: auto;
   }
 
   /* Choices Panel */
 
   .choices-panel {
-    width: 30%;
     align-items: center;
   } 
 
@@ -126,7 +114,7 @@ body {
     font-family:Arial, sans-serif;
     font-size:14px;
     overflow:hidden;
-    padding:10px 5px;
+    padding:5px 5px;
     word-break:normal;
   }
 
@@ -140,7 +128,9 @@ body {
   }
 
   .tg .tg-9wq8{
-    border-color:inherit;text-align:center;vertical-align:middle
+    border-color:inherit;
+    text-align:center;
+    vertical-align:middle
   }
 
   .tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
@@ -164,6 +154,7 @@ body {
   
   .chat-wrapper {
     padding: 10px;
+    text-align: center;
   }
   
   .chat-wrapper form {
@@ -188,7 +179,6 @@ body {
   /* Scoreboard */
 
   .scoreboard-panel{
-    width: 30%;
     align-items: center;
   } 
 
@@ -320,119 +310,44 @@ div.notification.danger{
 }
 
 .players-box {
-  width: 400px;
-  margin: 20px auto;
   border: 1px solid lightgrey;  
   position: relative;
   font-family: "Roboto Slab", sans-serif;
   text-align: center;
 }
 
-.current-player {
-  width: 400px;
-  margin: 20px auto;
-  border: 1px solid lightgrey;  
-  position: relative;
-  font-family: "Roboto Slab", sans-serif;
-  text-align: center;
-}
-
-/* Toggle Switch */
-
-/* The switch - the box around the slider */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 25px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .2s;
-  transition: .2s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 17px;
-  width: 17px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .2s;
-  transition: .2s;
-}
-
-input:checked + .slider {
-  background-color: #00bcd4;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #00bcd4;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(15px);
-  -ms-transform: translateX(15px);
-  transform: translateX(15px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-/* Results Table */
-.xyz  {
+/* Score Table */
+.scoreTable  {
   border-collapse:collapse;
   border-spacing:0;
-  border-color:black
+  border-color:black;
+  margin: auto
 }
 
-.xyz td{
+.scoreTable td{
   border-color:black;
   border-style:solid;
   border-width:1px;
   font-family:Arial, sans-serif;
-  font-size:14px;
+  font-size:12px;
   overflow:hidden;
-  padding:10px 5px;
+  padding:5px 5px;
   word-break:normal;
 }
 
-.xyz th{
+.scoreTable th{
   border-color:black;
   border-style:solid;
   border-width:1px;
   font-family:Arial, sans-serif;
-  font-size:14px;
+  font-size:12px;
   font-weight:normal;
   overflow:hidden;
-  padding:10px 5px;
+  padding:5px 5px;
   word-break:normal;
 }
 
-.xyz .tg-efol{
+.scoreTable .tg-efol{
   background-color:#c0c0c0;
   border-color:inherit;
   font-weight:bold;
@@ -440,14 +355,14 @@ input:checked + .slider:before {
   vertical-align:middle
 }
 
-.xyz .tg-uzvj{
+.scoreTable .tg-uzvj{
   border-color:inherit;
   font-weight:bold;
   text-align:center;
   vertical-align:middle
 }
 
-.xyz .tg-7btt{
+.scoreTable .tg-7btt{
   border-color:inherit;
   font-weight:bold;
   text-align:center;
@@ -455,11 +370,11 @@ input:checked + .slider:before {
 }
 
 @media screen and (max-width: 767px) {
-  .xyz {
+  .scoreTable {
     width: auto !important;
   }
 
-  .xyz col {
+  .scoreTable col {
     width: auto !important;
   }
   .scoreboard-panel {
