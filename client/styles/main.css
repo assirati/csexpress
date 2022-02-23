@@ -347,38 +347,24 @@ div.notification.danger{
   word-break:normal;
 }
 
-.scoreTable .tg-efol{
+.scoreTable .tg-18eh{
+  border-color:#000000;
+  font-weight:bold;
+  text-align:center;
+  vertical-align:middle
+}
+
+.scoreTable .tg-te0j{
   background-color:#c0c0c0;
-  border-color:inherit;
+  border-color:#000000;
   font-weight:bold;
   text-align:center;
   vertical-align:middle
 }
 
-.scoreTable .tg-uzvj{
-  border-color:inherit;
-  font-weight:bold;
-  text-align:center;
-  vertical-align:middle
-}
-
-.scoreTable .tg-7btt{
-  border-color:inherit;
+.scoreTable .tg-mqa1{
+  border-color:#000000;
   font-weight:bold;
   text-align:center;
   vertical-align:top
-}
-
-@media screen and (max-width: 767px) {
-  .scoreTable {
-    width: auto !important;
-  }
-
-  .scoreTable col {
-    width: auto !important;
-  }
-  .scoreboard-panel {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
 }
