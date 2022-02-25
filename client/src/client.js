@@ -1,6 +1,6 @@
 let choices = [];
 let scoreTotal = []
-let score = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+let scoreRows = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let scoreRef = [100, 70, 60, 50, 40, 30, 40, 50, 60, 70, 100];
 let fifthDice = {};
 
@@ -36,15 +36,14 @@ const onCurrentPlayerJoins = (sock, players) => (e) => {
     return false;
 };
 
-const onPlayerListUpdateed = (data, players) => {
+const onPlayerListUpdated = (data, players) => {
     const table = document.getElementById("players-table");
     table.innerHTML = '<tr><th>Nome</th><th>Pronto?</th><th>Placar</th></tr>';
     data.forEach((player) => {
-        players.push(new Player(player.id, player.name, player.ready));
+        players.push(new Player(player.id, player.name, player.ready, player.score));
         table.innerHTML += `<tr><td>${player.name}</td>
                                 <td>${(player.ready) ? '✔️' : '❌'}</td>
                                 <td>${player.score}</td></tr>`;
-
     });
 };
 
@@ -76,11 +75,10 @@ const onBtnChoiceClick = (sock) => (e) => {
 
     calculateScore(sock, c);
 
-    sock.emit('choiceMade', c);
+    sock.emit('choiceMade', c, scoreTotal);
 };
 
 function calculateScore(sock, choice) {
-
     let c = choice.split('');
     let f = parseInt(c[0]);
     let v1 = parseInt(c[1]) + parseInt(c[2]);
@@ -98,15 +96,14 @@ function calculateScore(sock, choice) {
             //Gerar erro
     }
 
-    if (score[v1 - 2] < 9)
-        score[v1 - 2] = score[v1 - 2] + 1;
+    if (scoreRows[v1 - 2] < 9)
+        scoreRows[v1 - 2] = scoreRows[v1 - 2] + 1;
         
-    if (score[v2 - 2] < 9)
-        score[v2 - 2] = score[v2 - 2] + 1;
+    if (scoreRows[v2 - 2] < 9)
+        scoreRows[v2 - 2] = scoreRows[v2 - 2] + 1;
     
     soma = 0;
-    score.forEach((e, index) => {
-        sock.emit('message', (index+2) + ' = ' + e);
+    scoreRows.forEach((e, index) => {
         if (e > 0 && e <= 4)
             soma -= 200;
         else 
@@ -120,124 +117,105 @@ function calculateScore(sock, choice) {
 
     scoreTotal = soma;
 
-    var tstart = `<thead>
-    <tr>
-      <th class="tg-uzvj">Soma</th>
-      <th class="tg-uzvj">Pontos</th>
-      <th class="tg-uzvj" colspan="3">Contagem</th>
-      <th class="tg-uzvj" colspan="2" rowspan="2">5º Dado</th>
-      <th class="tg-uzvj" rowspan="2">Fim de<br>Jogo</th>
-    </tr>
-    <tr>
-      <th class="tg-efol"></th>
-      <th class="tg-uzvj">X</th>
-      <th class="tg-uzvj">-200</th>
-      <th class="tg-uzvj">0</th>
-      <th class="tg-uzvj">+ X para cada</th>
-    </tr>
-  </thead>
-  <tbody>`
-    var tMiddle = `
-    <tr>
-      <td class="tg-uzvj">2</td>
-      <td class="tg-uzvj">100</td>
-      <td class="tg-uzvj">☑️⬜⬜⬜</td>
-      <td class="tg-uzvj">⬜</td>
-      <td class="tg-uzvj">⬜⬜⬜⬜</td>
-      <td class="tg-uzvj">5</td>
-      <td class="tg-uzvj">⬜⬜⬜⬜⬜⬜⬜⬜</td>
-      <td class="tg-uzvj">⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">3</td>
-      <td class="tg-uzvj">70</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">5</td>
-      <td class="tg-7btt">⬜⬜⬜⬜⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">4</td>
-      <td class="tg-uzvj">60</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">5</td>
-      <td class="tg-7btt">⬜⬜⬜⬜⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">5</td>
-      <td class="tg-uzvj">50</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-uzvj" colspan="3" rowspan="8"></td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">6</td>
-      <td class="tg-uzvj">40</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">7</td>
-      <td class="tg-uzvj">30</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">8</td>
-      <td class="tg-uzvj">40</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">9</td>
-      <td class="tg-uzvj">50</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">10</td>
-      <td class="tg-uzvj">60</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">11</td>
-      <td class="tg-uzvj">70</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-    </tr>
-    <tr>
-      <td class="tg-uzvj">12</td>
-      <td class="tg-uzvj">100</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-      <td class="tg-7btt">⬜</td>
-      <td class="tg-7btt">⬜⬜⬜⬜</td>
-    </tr>`
-    var tEnd = `
-  </tbody>`
+    var tHead = `
+    <thead>
+      <tr>
+        <th class="tg-18eh">Soma</th>
+        <th class="tg-18eh">Pontos</th>
+        <th class="tg-18eh">Contagem</th>
+        <th class="tg-18eh"></th>
+        <th class="tg-18eh"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tg-18eh"></td>
+        <td class="tg-18eh">X</td>
+        <td class="tg-18eh">-200</td>
+        <td class="tg-18eh">0</td>
+        <td class="tg-18eh">+ X para cada</td>
+      </tr>`;
 
-    const table = document.getElementById("scoreboardTable");
-    table.innerHTML = tstart + tMiddle + tEnd;
+    var tMiddle = '';
+    for (let i = 0; i < 11; i++){
+      tMiddle += `
+      <tr>
+        <td class="tg-18eh">${i+2}</td>
+        <td class="tg-18eh">${scoreRef[i]}</td>
+        <td class="tg-18eh">`;
+      for (let j = 1; j <= 4; j++)
+        if (scoreRows[i] >= j )
+          tMiddle += `☑️`;
+        else
+          tMiddle += `⬜`;
+
+      tMiddle += `</td><td class="tg-18eh">${(scoreRows[i] >= 5 ? '☑️' : '⬜')}</td>
+        <td class="tg-18eh">`;
+        
+      for (let j = 6; j <= 9; j++)
+        if (scoreRows[i] >= j )
+          tMiddle += `☑️`;
+        else
+          tMiddle += `⬜`;
+
+      tMiddle += `  </td>
+      </tr>`;
+    }
+
+    var tEnd = `</tbody>`;
+
+    const tableScore = document.getElementById("scoreboardTable");
+    tableScore.innerHTML = tHead + tMiddle + tEnd;
+
+    tHead = `<thead>
+        <tr>
+          <th class="tg-18eh" colspan="2">5ª Dado</th>
+          <th class="tg-18eh">Fim de<br>Jogo</th>
+          <th class="tg-18eh">Sua Pontuação</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    tMiddle = '';
+    cont = 0;
+    for (const [key, value] of Object.entries(fifthDice)) {
+      tMiddle += `<tr>
+        <td class="tg-18eh">${key}</td>
+        <td class="tg-18eh">`;
+        
+        for (let i = 1; i <= 7; i++)
+          if (value >= i )
+            tMiddle += `☑️`;
+          else
+            tMiddle += `⬜`;
+
+        tMiddle += `</td>
+          <td class="tg-18eh">${(value == 8 ? '☑️' : '⬜')}</td>
+          ${(cont == 0 ? '<td class="tg-18eh" rowspan="3">' + scoreTotal + '</td>' : '')}
+        </tr>`;
+
+        cont++;
+    }
+
+    for (let i = 3 - cont; i > 0; i--)
+      tMiddle += `<tr>
+        <td class="tg-18eh">&nbsp;&nbsp;</td>
+        <td class="tg-18eh">⬜⬜⬜⬜⬜⬜⬜</td>
+        <td class="tg-18eh">⬜</td>
+      </tr>`;
+    
+    tEnd = `</tbody>`;
+
+    const table5thDice = document.getElementById("fiftyDiceTable");
+    table5thDice.innerHTML = tHead + tMiddle + tEnd;
 
     sock.emit('message', sock.playername + ' tem ' + scoreTotal + ' pontos');
+    sock.emit('reportScore', scoreTotal);
 
-    if (fifthDice[f] >= 9) {
+    if (fifthDice[f] >= 8) {
         sock.emit('message', 'Jogo terminou para ' + sock.playername);
         //sock.emit('statusChanged');
     }
-
 }
 
 const disableFormElems = (options) => {
@@ -308,7 +286,7 @@ const  onAwaitingConnection = ( data ) => {
     });
 
     //Quando o servidor avisa que um novo jogador entrou
-    sock.on('playerListUpdateed', (data) => onPlayerListUpdateed(data, players));
+    sock.on('playerListUpdated', (data) => onPlayerListUpdated(data, players));
 
     //Quando o servidor avisa que está aguardando jogadores
     sock.on('awaitingPlayers', (data) => onAwaitingConnection(data));

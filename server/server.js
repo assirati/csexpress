@@ -40,14 +40,14 @@ io.on('connection', (sock) => {
         sock.playerId = newPlayer.id;
         io.emit('message', newPlayer.name + ' entrou no jogo!');
         io.emit('message', 'Aguardando mais jogadores entrarem...');
-        io.emit('playerListUpdateed', players);
+        io.emit('playerListUpdated', players);
         sock.emit('close modal');
     });
 
     sock.on('playerReadyToStart', (playerName) => {
         idx = players.findIndex(obj => obj.name === playerName)
         players[idx].ready = !players[idx].ready
-        io.emit('playerListUpdateed', players);
+        io.emit('playerListUpdated', players);
 
         let StartCountdown = new Interval(function(){
             io.emit('message', counter);
@@ -81,7 +81,7 @@ io.on('connection', (sock) => {
     sock.on('disconnect', (reason) => {
         if(sock.playerName !== undefined) {
             let removedPlayer = players.splice(players.indexOf(sock.playerName), 1);
-            io.emit('playerListUpdateed', players);
+            io.emit('playerListUpdated', players);
             io.emit('message', sock.playerName + ' desconectou...');
             
             if (players.length < 1)
@@ -89,11 +89,12 @@ io.on('connection', (sock) => {
         }
     });
 
-    sock.on('choiceMade', (c) => {
+    sock.on('choiceMade', (c, score) => {
         io.emit('message', `${sock.playerName} escolheu "${parseInt(c[1]) + parseInt(c[2])}" e "${parseInt(c[3]) + parseInt(c[4])}", deixando "${c[0]}"`);
         const player = players.find(p => p.name === sock.playerName);
         player.ready = true;
-        io.emit('playerListUpdateed', players);
+        player.score = score;
+        io.emit('playerListUpdated', players);
 
         if (players.every(el => el.ready == true))
             newTurn();
@@ -144,5 +145,5 @@ const newTurn = () => {
         p.ready = false;
     });
     io.emit('awaitingPlayersChoice');
-    io.emit('playerListUpdateed', players);
+    io.emit('playerListUpdated', players);
 };
