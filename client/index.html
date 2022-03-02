@@ -26,20 +26,18 @@
         </div>
       </div>
       <h3>Escolha sua jogada</h3>
-      <table class="tg" id="choices-table">
+      <table class="choices-table" id="choices-table">
         </table>
     </div>
     <div class="game-interface">
-      <!--<canvas height="400" width="400"></canvas>-->
       <div class="players-box" id="players-box">
         <h3>Jogadores online no momento</h3>
         <table id="players-table" class="players-table" ></table>
       </div>
       <div class="controls-wrapper">
-        <ul id="events"></ul>
+        <ul id="events" class="messagesul"></ul>
           <div class="chat-wrapper">
-              <button id="ready-button">Iniciar partida</button>
-            </label>
+              <button id="ready-button" class="ready-button">Iniciar partida</button>
           </div>
       </div>
     </div>
@@ -171,13 +169,13 @@
     </div>
   </div>
 
-    <!-- Novo Modal -->
+    <!-- Modal de Novo Jogador -->
     <div class="modal-container">
       <div class="modal-content">
           <form action="" id="newPlayerForm">
               <div class="form-group">
-                  <input type="text" placeholder="Digite seu nome" id="playername" name="" value="" autofocus required aria-required>
-                  <button type="submit"> Jogar </button>      
+                  <input type="text" placeholder="Digite seu nome" class="playernameinput" id="playername" name="" value="" autofocus required aria-required>
+                  <button type="submit" class="joinbutton"> Jogar </button>      
               </div>
           </form>
       </div>

@@ -1,188 +1,251 @@
+/* Gerais */
+
 body {
-    font-family: "Helvetica Neue", sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  input {
-    outline: none;
-    font-size: 1.0rem;
-    padding: 0 5px;
-  }
-  
-  button {
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    padding: 3px 15px;
-    color: white;
-    line-height: 25px;
-    background-color: #00bcd4;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
-    transition: all 150ms ease-in;
-    outline: none;
-  }
-  
-  button:disabled {
-    background-color: #aaaaaa;
-  }  
+  font-family: "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
-  button:hover:not([disabled]) {
-    background-color: #79d7e4;
-  }
-  
-  button.turn:hover {
-    background-color: #eaeaea;
-  }
-  
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-bottom: 1px solid lightgrey;
-    overflow-y: scroll;
-  }
-  
-  /*li {
-    padding: 10px 10px 10px 10px;
-  }*/
-  
-  canvas {
-    display: block;
-    margin: 10px auto;
-  }
+button {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 3px 15px;
+  color: white;
+  line-height: 25px;
+  background-color: #00bcd4;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+  transition: all 150ms ease-in;
+  outline: none;
+}
 
-  /* Panels */
+button:disabled {
+  background-color: #aaaaaa;
+}  
 
-  .main-panel {
-    align-content: center;
-  }
+button:hover:not([disabled]) {
+  background-color: #79d7e4;
+}
 
-  .game-interface {
-    align-self: auto;
-  }
+button.turn:hover {
+  background-color: #eaeaea;
+}
 
-  .scoreboard-panel {
-    align-self: auto;
-  }
+/* Main Panel */
 
-  /* Choices Panel */
+.main-panel {
+  width: 100%;
+  text-align: center;
+}
 
-  .choices-panel {
-    align-items: center;
-  } 
+/* Inner Panels */
 
-  .dice-container {
-    display: flex;
-    background-color: rgb(255, 255, 255);
-    width: 400px;
-    margin: 20px auto;
-  }
+.choices-panel {
+  float:left;
+  width:34%;
+} 
 
-  .dice {
-    width: 20%;
-    flex: 1;
-    height: auto;
-  }
+.game-interface {
+  float:left;
+  width:33%;
+}
 
-  .dice img {
-    width: 100%;
-    height: auto;
-  }
+.scoreboard-panel {
+  float:right;
+  width:33%;
+}
 
-  .fifthdice-choice {
-    width: 52%;
-    height: auto;
-  }
+@media screen and (max-width: 770px) {
+  .choices-panel{width:100%; overflow-x: auto;-webkit-overflow-scrolling: touch;}
+  .game-interface {width:100%; overflow-x: auto;-webkit-overflow-scrolling: touch;}
+  .scoreboard-panel {width:100%; overflow-x: auto;-webkit-overflow-scrolling: touch;}
+}
 
-  .dice-choice {
-    width: 95%;
-    height: auto;
-  }
+/* Choices Panel */
 
-  .tg  {
-    border-collapse:collapse;
-    border-spacing:0;
-  }
+/* Rolled Dice Container */
+.dice-container {
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  width: 90%;
+  margin: 20px auto;
+}
 
-  .tg td{
-    border-color:black;
-    border-style:solid;
-    border-width:1px;
-    font-family:Arial, sans-serif;
-    font-size:14px;
-    overflow:hidden;
-    padding:5px 5px;
-    word-break:normal;
-  }
+.dice {
+  width: 20%;
+  flex: 1;
+  height: auto;
+}
 
-  .tg th{
-    border-color:black;
-    border-style:solid;
-    border-width:1px;
-    overflow:hidden;
-    padding:10px 5px;
-    word-break:normal;
-  }
+/* Dice choices table */
 
-  .tg .tg-9wq8{
-    border-color:inherit;
-    text-align:center;
-    vertical-align:middle
-  }
+.dice img {
+  width: 100%;
+  height: auto;
+}
 
-  .tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
+.fifthdice-choice {
+  width: 53%;
+  height: auto;
+}
 
-  .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.dice-choice {
+  width: 95%;
+  height: auto;
+}
 
-  @media screen and (max-width: 767px) {
-    .tg {width: auto !important;}
-    .tg col {width: auto !important;}
-    .tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;}
-  }
+.choices-table  {
+  border-collapse:collapse;
+  border-spacing:0;
+}
 
-  /* Middle Controls */
+.choices-table td{
+  border-color:black;
+  border-style:solid;
+  border-width:1px;
+  font-family:Arial, sans-serif;
+  font-size:14px;
+  overflow:hidden;
+  padding:2px 2px;
+  word-break:normal;
+}
 
-  .controls-wrapper {
-    background-color: rgb(255, 255, 255);
-    width: 100%;
-    margin: 20px auto;
-    border: 1px solid lightgrey;
-  }
-  
-  .chat-wrapper {
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .chat-wrapper form {
-    display: flex;
-  }
-  
-  .chat-wrapper form input {
-    font-size: 1.0rem;
-    margin: 0 10px 0 0;
-    padding: 0 5px;
-    flex-grow: 1;
-  }
-  
-  .chat-wrapper form button {
-    width: 80px;
-  }
+.choices-table th{
+  border-color:black;
+  border-style:solid;
+  border-width:1px;
+  overflow:hidden;
+  padding:10px 5px;
+  word-break:normal;
+}
 
-  #events {
-    height: 300px;
-  }
+.choices-table .tg-9wq8{
+  border-color:inherit;
+  text-align:center;
+  vertical-align:middle
+}
 
-  /* Scoreboard */
+.choices-table .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
 
-  .scoreboard-panel{
-    align-items: center;
-  } 
+.choices-table .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
 
-  /* Modal e notificações */
+/* Game Interface */
+
+.players-box {
+  border: 1px solid lightgrey;  
+  position: relative;
+  text-align: center;
+}
+
+.controls-wrapper {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid lightgrey;
+}
+
+.chat-wrapper {
+  padding: 10px;
+  text-align: center;
+}
+
+#events {
+  height: 300px;
+}
+
+.messagesul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid lightgrey;
+  overflow-y: scroll;
+  text-align: left;
+}
+
+/*li {
+  padding: 10px 10px 10px 10px;
+}*/
+
+.players-table {
+  width: 100%;
+}
+
+.players-table td {
+  text-align: center;
+}
+
+.players-table td:first-child {
+  text-align: left;
+}​
+
+.players-table th {
+  text-align: center;
+}
+
+.players-table th:first-child {
+  text-align: left;
+}
+
+/* Scoreboard Panel */
+
+.scoreboard-panel{
+  align-items: center;
+} 
+
+/* Score Table */
+.scoreTable  {
+  border-collapse:collapse;
+  border-spacing:0;
+  border-color:black;
+  margin: auto
+}
+
+.scoreTable td{
+  border-color:black;
+  border-style:solid;
+  border-width:1px;
+  font-family:Arial, sans-serif;
+  font-size:12px;
+  overflow:hidden;
+  padding:5px 5px;
+  word-break:normal;
+}
+
+.scoreTable th{
+  border-color:black;
+  border-style:solid;
+  border-width:1px;
+  font-family:Arial, sans-serif;
+  font-size:12px;
+  font-weight:normal;
+  overflow:hidden;
+  padding:5px 5px;
+  word-break:normal;
+}
+
+.scoreTable .tg-18eh{
+  border-color:#000000;
+  font-weight:bold;
+  text-align:center;
+  vertical-align:middle
+}
+
+.scoreTable .tg-te0j{
+  background-color:#c0c0c0;
+  border-color:#000000;
+  font-weight:bold;
+  text-align:center;
+  vertical-align:middle
+}
+
+.scoreTable .tg-mqa1{
+  border-color:#000000;
+  font-weight:bold;
+  text-align:center;
+  vertical-align:top
+}
+
+/* Modal e notificações */
 
 .modal-container{
   z-index: 3000;
@@ -208,6 +271,12 @@ body {
   padding: 12px 8px;
   border: 1px solid #e3e3e3;
   width: 100%;
+}
+
+.playernameinput {
+  outline: none;
+  font-size: 1.0rem;
+  padding: 0 5px;
 }
 
 .modal-content button{
@@ -285,86 +354,4 @@ div.notification.danger{
   color: #66131b;
   background-color: #fcd4d7;
   border-color: #dfa3a9;
-}
-
-/* Interface */
-
-.players-table {
-  width: 100%;
-}
-
-.players-table td {
-  text-align: center;
-}
-
-.players-table td:first-child {
-  text-align: left;
-}​
-
-.players-table th {
-  text-align: center;
-}
-
-.players-table th:first-child {
-  text-align: left;
-}
-
-.players-box {
-  border: 1px solid lightgrey;  
-  position: relative;
-  font-family: "Roboto Slab", sans-serif;
-  text-align: center;
-}
-
-/* Score Table */
-.scoreTable  {
-  border-collapse:collapse;
-  border-spacing:0;
-  border-color:black;
-  margin: auto
-}
-
-.scoreTable td{
-  border-color:black;
-  border-style:solid;
-  border-width:1px;
-  font-family:Arial, sans-serif;
-  font-size:12px;
-  overflow:hidden;
-  padding:5px 5px;
-  word-break:normal;
-}
-
-.scoreTable th{
-  border-color:black;
-  border-style:solid;
-  border-width:1px;
-  font-family:Arial, sans-serif;
-  font-size:12px;
-  font-weight:normal;
-  overflow:hidden;
-  padding:5px 5px;
-  word-break:normal;
-}
-
-.scoreTable .tg-18eh{
-  border-color:#000000;
-  font-weight:bold;
-  text-align:center;
-  vertical-align:middle
-}
-
-.scoreTable .tg-te0j{
-  background-color:#c0c0c0;
-  border-color:#000000;
-  font-weight:bold;
-  text-align:center;
-  vertical-align:middle
-}
-
-.scoreTable .tg-mqa1{
-  border-color:#000000;
-  font-weight:bold;
-  text-align:center;
-  vertical-align:top
 }
