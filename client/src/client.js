@@ -47,17 +47,21 @@ const onPlayerListUpdated = (data, players) => {
     });
 };
 
+const onNotifyLoginEvent = ( data ) => {
+  disableFormElems(true);
+  const newElem = document.createElement('strong');
+  newElem.textContent = data.error;
+  const userForm = document.querySelector('#newPlayerForm');
+  userForm.prepend(newElem);
+  userForm.replaceChild(newElem, newElem);
+};
+
 const onPlayerReady = (sock) => (e) => {
     e.preventDefault();
 
     document.getElementById('ready-button').disabled = true;
 
     sock.emit('playerReadyToStart', sock.playername);
-};
-
-const onBtnTesteClick = () => (e) => {
-    e.preventDefault();
-    document.getElementById('newPlayerForm').submit();
 };
 
 const onBtnChoiceClick = (sock) => (e) => {
@@ -224,11 +228,6 @@ const disableFormElems = (options) => {
     modalContainer.getElementsByTagName('button')[0].setAttribute('disabled', options);
 };
 
-const  onAwaitingConnection = ( data ) => {
-    disableFormElems(true);
-    const newPlayerForm = document.getElementById("newPlayerForm");
-};
-
 (() => {
 
     let players = [];
@@ -239,6 +238,16 @@ const  onAwaitingConnection = ( data ) => {
     const sock = io();
 
     sock.on('message', log);
+
+    sock.on('logoffEvent', (data) => {
+      onNotifyLoginEvent(data);
+      const modalContainer = document.querySelector('.modal-container'); 
+      modalContainer.style.display = 'block';
+      const modalOverlay = document.querySelector('.modal-overlay');
+      modalOverlay.style.display = 'block';
+    });
+
+    sock.on('loginEvent', (data) => onNotifyLoginEvent(data));
 
     sock.on('diceRolled', (dataDices, dataChoices) => {
         choices = dataChoices;
@@ -287,9 +296,6 @@ const  onAwaitingConnection = ( data ) => {
 
     //Quando o servidor avisa que um novo jogador entrou
     sock.on('playerListUpdated', (data) => onPlayerListUpdated(data, players));
-
-    //Quando o servidor avisa que está aguardando jogadores
-    sock.on('awaitingPlayers', (data) => onAwaitingConnection(data));
 
     // Mostra um evento modal
     sock.on('show modal', () => {

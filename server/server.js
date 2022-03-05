@@ -42,6 +42,7 @@ io.on('connection', (sock) => {
         io.emit('message', 'Aguardando mais jogadores entrarem...');
         io.emit('playerListUpdated', players);
         sock.emit('close modal');
+        //sock.emit('loginEvent', {error: 'Este nome de jogador ja existe nesse jogo...'});
     });
 
     sock.on('playerReadyToStart', (playerName) => {
