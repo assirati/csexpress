@@ -33,16 +33,19 @@ io.on('connection', (sock) => {
     });
 
     sock.on('newPlayer', (playerName) => {
-        newPlayer = new Player(players.length, playerName, false);
-        players.push(newPlayer);
-        sock.emit('message', 'Você está conectado...');
-        sock.playerName = newPlayer.name;
-        sock.playerId = newPlayer.id;
-        io.emit('message', newPlayer.name + ' entrou no jogo!');
-        io.emit('message', 'Aguardando mais jogadores entrarem...');
-        io.emit('playerListUpdated', players);
-        sock.emit('close modal');
-        //sock.emit('loginEvent', {error: 'Este nome de jogador ja existe nesse jogo...'});
+        if (players.findIndex(obj => obj.name === playerName) >= 0) {
+            sock.emit('loginEvent', {error: 'Este nome de jogador ja existe nesse jogo...', blocking : false});
+        }
+        else {
+            newPlayer = new Player(players.length, playerName, false);
+            players.push(newPlayer);
+            sock.playerName = newPlayer.name;
+            sock.playerId = newPlayer.id;
+            io.emit('message', newPlayer.name + ' entrou no jogo!');
+            io.emit('message', 'Aguardando mais jogadores entrarem...');
+            io.emit('playerListUpdated', players);
+            sock.emit('close modal');
+        }
     });
 
     sock.on('playerReadyToStart', (playerName) => {

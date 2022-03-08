@@ -13,19 +13,10 @@ const log = (text) => {
     parent.scrollTop = parent.scrollHeight;
 };
 
-const onChatSubmitted = (sock) => (e) => {
-    e.preventDefault();
-
-    const input = document.querySelector('#chat');
-    const text = input.value;
-    input.value = '';
-
-    sock.emit('message', text);
-};
-
-const onRoll = (sock) => (e) => {
-    e.preventDefault();
-    sock.emit('rollDice');
+const disableFormElems = (options) => {
+    const modalContainer = document.querySelector('.modal-container');
+    modalContainer.getElementsByTagName('input')[0].disabled = options;
+    modalContainer.getElementsByTagName('button')[0].disabled = options;
 };
 
 const onCurrentPlayerJoins = (sock, players) => (e) => {
@@ -47,13 +38,10 @@ const onPlayerListUpdated = (data, players) => {
     });
 };
 
-const onNotifyLoginEvent = ( data ) => {
-  disableFormElems(true);
-  const newElem = document.createElement('strong');
-  newElem.textContent = data.error;
-  const userForm = document.querySelector('#newPlayerForm');
-  userForm.prepend(newElem);
-  userForm.replaceChild(newElem, newElem);
+const onNotifyLoginEvent = (data) => {
+    disableFormElems(data.blocking);
+    const e = document.querySelector('#newPlayerForm > div > strong');
+    e.textContent = data.error;
 };
 
 const onPlayerReady = (sock) => (e) => {
@@ -93,8 +81,9 @@ function calculateScore(sock, choice) {
         fifthDice[f] = (fifthDice[f] || 0) + 1;
     }
     else {
-        if (fifthDice.hasOwnProperty(int(c[0])))
-            fifthDice[f] = fifthDice.get(f) + 1;
+        if (c[0] in fifthDice)
+            if (fifthDice.get(f) < 8)
+                fifthDice[f] = fifthDice.get(f) + 1;
         else
             return;
             //Gerar erro
@@ -222,57 +211,34 @@ function calculateScore(sock, choice) {
     }
 }
 
-const disableFormElems = (options) => {
-    const modalContainer = document.querySelector('.modal-container');
-    modalContainer.getElementsByTagName('input')[0].setAttribute('disabled', options);
-    modalContainer.getElementsByTagName('button')[0].setAttribute('disabled', options);
-};
+function onDiceRolled(sock, dataDices, dataChoices) {
+    choices = dataChoices;
+    document.getElementById("dice1").src = `img/dice${dataDices.dice1}.png`;
+    document.getElementById("dice2").src = `img/dice${dataDices.dice2}.png`;
+    document.getElementById("dice3").src = `img/dice${dataDices.dice3}.png`;
+    document.getElementById("dice4").src = `img/dice${dataDices.dice4}.png`;
+    document.getElementById("dice5").src = `img/dice${dataDices.dice5}.png`;
 
-(() => {
+    const table = document.getElementById("choices-table");
+    table.innerHTML = `<thead>
+                            <tr>
+                            <th class="tg-c3ow">5º dado</th>
+                            <th class="tg-c3ow" colspan="3">Par 1</th>
+                            <th class="tg-c3ow" colspan="3">Par 2</th>
+                            <th class="tg-0pky"></th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
-    let players = [];
+    let i = 0;
+    let pular = [];
+    let optionHTML = [];
 
-    //const canvas = document.querySelector('canvas');
-    //const ctx = canvas.getContext('2d');
+    //Montar as saídas para cada possibilidade de escolha    
+    dataChoices.forEach((choice) => {        
+        var c = choice.split('');
 
-    const sock = io();
-
-    sock.on('message', log);
-
-    sock.on('logoffEvent', (data) => {
-      onNotifyLoginEvent(data);
-      const modalContainer = document.querySelector('.modal-container'); 
-      modalContainer.style.display = 'block';
-      const modalOverlay = document.querySelector('.modal-overlay');
-      modalOverlay.style.display = 'block';
-    });
-
-    sock.on('loginEvent', (data) => onNotifyLoginEvent(data));
-
-    sock.on('diceRolled', (dataDices, dataChoices) => {
-        choices = dataChoices;
-        document.getElementById("dice1").src = `img/dice${dataDices.dice1}.png`;
-        document.getElementById("dice2").src = `img/dice${dataDices.dice2}.png`;
-        document.getElementById("dice3").src = `img/dice${dataDices.dice3}.png`;
-        document.getElementById("dice4").src = `img/dice${dataDices.dice4}.png`;
-        document.getElementById("dice5").src = `img/dice${dataDices.dice5}.png`;
-
-        const table = document.getElementById("choices-table");
-        table.innerHTML = `<thead>
-                                <tr>
-                                <th class="tg-c3ow">5º dado</th>
-                                <th class="tg-c3ow" colspan="3">Par 1</th>
-                                <th class="tg-c3ow" colspan="3">Par 2</th>
-                                <th class="tg-0pky"></th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
-
-        let i = 0;
-
-        dataChoices.forEach((choice) => {
-            var c = choice.split('');
-            table.innerHTML += `<tr>
+        optionHTML.push(`<tr>
             <td class="tg-9wq8"><img src="img/dice${c[0]}.png" alt="" class="fifthdice-choice" /></td>
             <td class="tg-9wq8"><img src="img/dice${c[1]}.png" alt="" class="dice-choice" /></td>
             <td class="tg-9wq8"><img src="img/dice${c[2]}.png" alt="" class="dice-choice" /></td>
@@ -280,36 +246,52 @@ const disableFormElems = (options) => {
             <td class="tg-9wq8"><img src="img/dice${c[3]}.png" alt="" class="dice-choice" /></td>
             <td class="tg-9wq8"><img src="img/dice${c[4]}.png" alt="" class="dice-choice" /></td>
             <td class="tg-9wq8"> =${parseInt(c[3]) + parseInt(c[4])}</td>
-            <td class="tg-9wq8"><button id="choice${i}" value="${i}" class="btnChoice">Escolher</button> </td>
-          </tr>`;
-            i++;
-        });
-        table.innerHTML += `</tbody>`;
+            <td class="tg-9wq8"><button id="choice${i}" value="${i}" class="btnChoice" onclick>Escolher</button> </td>
+            </tr>`);
 
-        sock.dataChoices = dataChoices;
+        if (Object.keys(fifthDice).length >= 3 && !(c[0] in fifthDice))
+            pular.push(true);
+        else
+            pular.push(false);
 
-        for (let i = 0; i < dataChoices.length; i++)
-            document
-            .getElementById("choice" + i)
-            .addEventListener('click', onBtnChoiceClick(sock));
+        i++;
     });
 
-    //Quando o servidor avisa que um novo jogador entrou
+    //percorre as escolhas decidindo quem mostra e quem pular
+    for(let j = 0; j < pular.length; j++) {
+        //mostra a opção se não estiver marcada para pular 
+        // ou se todas as opções estiverem (jogada grátis)
+        if (!pular[j] || pular.every((p) => p === true))
+            table.innerHTML += optionHTML[j];
+    }
+
+    table.innerHTML += `</tbody>`;
+
+    pular.forEach((pula, idx) => {
+        if (!pula) {
+            document
+            .getElementById("choice" + idx)
+            .addEventListener('click', onBtnChoiceClick(sock));            
+        }
+    });
+};
+
+(() => {
+
+    let players = [];
+
+    const sock = io();
+
+    sock.on('message', log);
+
+    sock.on('loginEvent', (data) => onNotifyLoginEvent(data));
+
+    sock.on('diceRolled', (dataDices, dataChoices) => onDiceRolled(sock, dataDices, dataChoices));
+
     sock.on('playerListUpdated', (data) => onPlayerListUpdated(data, players));
 
-    // Mostra um evento modal
-    sock.on('show modal', () => {
-        disableFormElems(true);
-        const modalContainer = document.querySelector('.modal-container');
-        modalContainer.modalContainer.style.display = 'block';
-        modalContainer.modalOverlay.style.display = 'block';
-    });
-
-    // Fecha o evento modal
     sock.on('close modal', () => {
         disableFormElems(false);
-        //newElem = document.createElement('strong');
-        //newElem.textContent = '';
         const modalContainer = document.querySelector('.modal-container');
         modalContainer.style.display = 'none';
 
